@@ -19,10 +19,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return 2
-//    }
   
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return array2.count
     }
@@ -34,11 +34,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.lbl2.text = array2[indexPath.row]
         cell.img.image = arrimg[indexPath.row]
         return cell
-      //  UITableViewStyle *cell
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
-//        cell?.textLabel?.text = array1[indexPath.row]
-//        cell?.detailTextLabel?.text = array2[indexPath.row]
-//        return cell!
     }
     
     
@@ -49,21 +44,32 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
        detail.strlbl2 = array2[indexPath.row]
         detail.strimg = arrimg[indexPath.row]
         self.navigationController?.pushViewController(detail, animated: true)
-        
-        
-    
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
+            print("Before deletion: array1 count = \(array1.count)")
+            
+            // Remove the data from your data source
             array1.remove(at: indexPath.row)
             array2.remove(at: indexPath.row)
             arrimg.remove(at: indexPath.row)
-            tblview.deleteRows(at: [indexPath], with: .fade)
+            
+            // Delete the row from the table view
+            tableView.deleteRows(at: [indexPath], with: .left)
+            
+            print("After deletion: array1 count = \(array1.count)")
         }
     }
     
-    
-    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.alpha = 0
+        let transform = CATransform3DTranslate(CATransform3DIdentity, -250, 20, 0)
+        cell.layer.transform = transform
+        UIView.animate(withDuration: 1.0) {
+            cell.alpha = 1
+            cell.layer.transform = CATransform3DIdentity
+        }
+    }
 }
 
